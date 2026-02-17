@@ -11,6 +11,7 @@ public class CandidateMapper {
     public static CandidateEntity toCandidateEntity(CandidateRequest candidateRequest) {
         return CandidateEntity.builder()
                 .name(candidateRequest.name())
+                .username(candidateRequest.username())
                 .email(candidateRequest.email())
                 .password(candidateRequest.password())
                 .description(candidateRequest.description())
@@ -21,6 +22,7 @@ public class CandidateMapper {
     public static CandidateResponse toCandidateResponse(CandidateEntity candidateEntity) {
         return CandidateResponse.builder()
                 .id(candidateEntity.getId())
+                .username(candidateEntity.getUsername())
                 .name(candidateEntity.getName())
                 .email(candidateEntity.getEmail())
                 .description(candidateEntity.getDescription())
