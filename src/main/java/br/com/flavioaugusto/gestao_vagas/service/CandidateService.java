@@ -1,6 +1,7 @@
 package br.com.flavioaugusto.gestao_vagas.service;
 
 import br.com.flavioaugusto.gestao_vagas.entity.CandidateEntity;
+import br.com.flavioaugusto.gestao_vagas.exception.UserAlreadyExistsException;
 import br.com.flavioaugusto.gestao_vagas.repository.CandidateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,16 @@ public class CandidateService {
     public CandidateEntity create(CandidateEntity candidateEntity) {
         CandidateEntity candidateByEmail = findByEmail(candidateEntity.getEmail());
 
-        if (candidateByEmail == null) {
-            return candidateRepository.save(candidateEntity);
+        if (candidateByEmail != null) {
+            throw new UserAlreadyExistsException();
+
         }
 
-        return null;
+        return candidateRepository.save(candidateEntity);
     }
 
     public CandidateEntity findByEmail(String email){
-        Optional<CandidateEntity> candidate = candidateRepository.findByEmail(email);
-        return candidate.orElse(null);
+        return candidateRepository.findByEmail(email)
+                .orElse(null);
     }
 }
