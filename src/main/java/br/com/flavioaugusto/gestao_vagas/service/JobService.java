@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,8 @@ public class JobService {
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
 
-    public JobResponse create(JobRequest jobRequest) {
-        Optional<CompanyEntity> company = companyRepository.findById(jobRequest.company_id());
+    public JobResponse create(JobRequest jobRequest, String companyId) {
+        Optional<CompanyEntity> company = companyRepository.findById(UUID.fromString(companyId));
         JobEntity job = JobMapper.toJob(jobRequest);
 
         if (company.isPresent()) {
