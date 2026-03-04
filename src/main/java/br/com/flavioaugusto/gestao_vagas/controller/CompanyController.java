@@ -19,7 +19,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    @PostMapping("/")
+    @PostMapping("/new")
     public ResponseEntity<Object> create(@Valid @RequestBody CompanyRequest companyRequest) {
         try{
             CompanyResponse company = companyService.create(companyRequest);
