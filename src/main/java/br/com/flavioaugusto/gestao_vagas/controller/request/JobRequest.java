@@ -7,7 +7,6 @@ import java.util.UUID;
 public record JobRequest(
         String description,
         String benefits,
-        String level,
-        UUID company_id
+        String level
 ) {
 }
