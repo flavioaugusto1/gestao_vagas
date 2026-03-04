@@ -7,6 +7,7 @@ import br.com.flavioaugusto.gestao_vagas.exception.CompanyAlreadyExistsException
 import br.com.flavioaugusto.gestao_vagas.mapper.CompanyMapper;
 import br.com.flavioaugusto.gestao_vagas.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyService {
     private final CompanyRepository companyRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public CompanyResponse create(CompanyRequest companyRequest) {
         CompanyEntity company = CompanyMapper.toCompanyEntity(companyRequest);
@@ -23,6 +25,9 @@ public class CompanyService {
         if (companyExists.isPresent()) {
             throw new CompanyAlreadyExistsException();
         }
+
+        String passwordEncoded = passwordEncoder.encode(company.getPassword());
+        company.setPassword(passwordEncoded);
 
         return CompanyMapper.toCompanyResponse(companyRepository.save(company));
     }
