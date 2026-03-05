@@ -1,6 +1,7 @@
 package br.com.flavioaugusto.gestao_vagas.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -12,20 +13,28 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 @Configuration
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final SecurityFilter securityFilter;
-    private final SecurityCandidateFilter securityCandidateFilter;
+    @Autowired
+    private SecurityFilter securityFilter;
+    @Autowired
+    private SecurityCandidateFilter securityCandidateFilter;
+
+    private static final String[] SWAGGER_URLS_ALLOW = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+    };
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/candidate/new").permitAll()
-                        .requestMatchers("/company/new").permitAll()
-                        .requestMatchers("/company/auth").permitAll()
-                         .requestMatchers("/candidate/auth").permitAll();;
+                            .requestMatchers("/company/new").permitAll()
+                            .requestMatchers("/company/auth").permitAll()
+                            .requestMatchers("/candidate/auth").permitAll()
+                            .requestMatchers(SWAGGER_URLS_ALLOW).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
