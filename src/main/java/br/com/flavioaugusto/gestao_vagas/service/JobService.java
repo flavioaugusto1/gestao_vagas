@@ -11,6 +11,7 @@ import br.com.flavioaugusto.gestao_vagas.repository.JobRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,5 +31,19 @@ public class JobService {
         }
 
         throw new CompanyNotFoundException();
+    }
+
+    public List<JobResponse> listAllJobs(String descriptionFilter) {
+        List<JobEntity> jobs = jobRepository.findAll();
+
+        if (descriptionFilter != null) {
+            List<JobEntity> filteredJobs = jobs.stream()
+                    .filter(job -> job.getDescription().contains(descriptionFilter))
+                    .toList();
+
+            return JobMapper.toJobResponseList(filteredJobs);
+        }
+
+        return JobMapper.toJobResponseList(jobs);
     }
 }
